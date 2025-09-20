@@ -9,6 +9,9 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     * creation de la table postes avec les champs id, title, slug, content, created_at, updated_at
+     * en suite de la commande : php artisan make:migration create_poste_table --create=postes
+     * puis php artisan migrate pour appliquer la migration
      */
     public function up(): void
     {

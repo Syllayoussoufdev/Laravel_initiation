@@ -2,12 +2,19 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use App\Http\Controllers\BlogController;
 
 Route::get('/', function () {
     return view('welcome');
 });
-Route::prefix('/blog')->name('blogues_gk.')->group(function () {
-    Route::get('/', function (Request $request) {
+Route::prefix('/blog')->name('blogues.')->group(function () {
+    Route::get('/', [BlogController::class, 'index'])->name('index');
+
+    Route::get('/{slug}-{id}', [BlogController::class, 'show'])->where([
+        'id'=> '[0-9]+',
+        'slug' => '[a-z0-9\-]+',
+    ]) ->name('show');
+    //Route::get('/', function (Request $request) {
         //APRES AVOIR CRER LA TABLE AVEC UNE MIGRATION
         //ET LE MODEL AVEC LA COMMANDE : php artisan make:model Poste
         //ON PEUT MAINTENANT INTERAGIR AVEC LA BASE DE DONNE
@@ -35,17 +42,20 @@ Route::prefix('/blog')->name('blogues_gk.')->group(function () {
         $post->title = "Article modifié";
         $post->save(); delete()*/
 
-        return \App\Models\Poste::paginate(10) /* 'Bienvenue sur la page principale du blog !' */;
-    })->name('index');
+    //     return \App\Models\Poste::paginate(10) /* 'Bienvenue sur la page principale du blog !' */;
+    // })->name('index');
 
-    Route::get('/{slug}-{id}', function (string $slug, $id, Request $request) {
-        //recuperation d'un article par son id et son slug
-        $post = App\Models\Poste::where('id', $id)->where('slug', $slug);
-        if ($post->slug !== $slug) {
-            return to_route('blogues_gk.show', ['id' => $post->id, 'slug' => $post->slug]);
-        }
-        return $post;
-    })->where('id', '[0-9]+')->name('show');
+    // Route::get('/{slug}-{id}', function (string $slug, string $id, Request $request) {
+    //     //recuperation d'un article par son id et son slug
+    //     $post = App\Models\Poste::findOrFail($id);
+    //     if ($post->slug !== $slug) {
+    //         return to_route('blog.show', ['slug' => $post->slug, 'id' => $post->id]);
+    //     }
+    //     return $post;
+    // })->where([
+    //     'id'=> '[0-9]+',
+    //     'slug' => '[a-z0-9\-]+',
+    // ])->name('show');
 });
 
 
